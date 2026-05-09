@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command go -ErrorAction SilentlyContinue)",
+      "PowerShell($env:PATH)"
+    ]
+  }
+}
