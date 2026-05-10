@@ -43,11 +43,12 @@ type Config struct {
 	JWT struct {
 		Secret string `yaml:"secret"`
 	} `yaml:"jwt"`
+	DataPath string `yaml:"data_path"`
 }
 
 // DefaultConfig returns sensible defaults matching the CLI manual.
 func DefaultConfig() *Config {
-	home, _ := os.UserHomeDir()
+	project_dir, _ := os.Getwd()
 	cfg := &Config{}
 	cfg.Server.Host = "localhost"
 	cfg.Server.HTTPPort = 8080
@@ -55,27 +56,29 @@ func DefaultConfig() *Config {
 	cfg.Server.UDPPort = 9091
 	cfg.Server.GRPCPort = 9092
 	cfg.Server.WebSocketPort = 9093
-	cfg.Database.Path = filepath.Join(home, ".mangahub", "data.db")
+	cfg.Database.Path = filepath.Join(project_dir, "data","data.db")
 	cfg.Sync.AutoSync = true
 	cfg.Sync.ConflictResolution = "last_write_wins"
 	cfg.Notifications.Enabled = true
 	cfg.Logging.Level = "info"
-	cfg.Logging.Path = filepath.Join(home, ".mangahub", "logs")
+	cfg.Logging.Path = filepath.Join(project_dir, "logs")
 	cfg.JWT.Secret = "mangahub-secret-change-in-production"
+	cfg.DataPath = filepath.Join(project_dir,"data", "manga.json")
 	return cfg
 }
 
 // LoadConfig reads ~/.mangahub/config.yaml, falling back to defaults on error.
 func LoadConfig() *Config {
 	cfg := DefaultConfig()
-	home, err := os.UserHomeDir()
+	project_dir, err := os.Getwd()
 	if err != nil {
 		return cfg
 	}
-	path := filepath.Join(home, ".mangahub", "config.yaml")
+	
+	path := filepath.Join(project_dir, "config.yaml")
 	data, err := os.ReadFile(path)
 	if err != nil {
-		return cfg // file doesn't exist yet — use defaults
+		return cfg 
 	}
 	_ = yaml.Unmarshal(data, cfg)
 	return cfg

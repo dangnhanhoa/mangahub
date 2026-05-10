@@ -1,4 +1,4 @@
-.PHONY: build run-api run-tcp run-udp run-grpc run-all proto seed test clean fmt tidy
+.PHONY: build run-api run-tcp run-udp run-grpc run-all proto init seed test clean fmt tidy
 
 ## Build all binaries
 build:
@@ -33,6 +33,10 @@ proto:
 		--go_out=. --go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
 		proto/manga.proto
+
+## Initialize ~/.mangahub/ config and directories (run once)
+init:
+	go run ./cmd/init
 
 ## Seed manga database from data/manga.json
 seed:

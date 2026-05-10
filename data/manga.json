@@ -1,0 +1,45 @@
+[
+    {
+        "id": "one-piece",
+        "title": "One Piece",
+        "author": "Eiichiro Oda",
+        "genres": [
+            "Action",
+            "Adventure",
+            "Comedy",
+            "Fantasy"
+        ],
+        "status": "ongoing",
+        "total_chapters": 1110,
+        "description": "Cuộc hành trình tìm kiếm kho báu One Piece của Monkey D. Luffy và băng hải tặc Mũ Rơm.",
+        "cover_url": "https://example.com/one-piece.jpg"
+    },
+    {
+        "id": "naruto",
+        "title": "Naruto",
+        "author": "Masashi Kishimoto",
+        "genres": [
+            "Action",
+            "Adventure",
+            "Martial Arts"
+        ],
+        "status": "completed",
+        "total_chapters": 700,
+        "description": "Câu chuyện về Uzumaki Naruto, một ninja trẻ muốn tìm cách khẳng định mình để được mọi người công nhận và khao khát trở thành Hokage.",
+        "cover_url": "https://example.com/naruto.jpg"
+    },
+    {
+        "id": "solo-leveling",
+        "title": "Solo Leveling",
+        "author": "Chugong",
+        "genres": [
+            "Action",
+            "Fantasy",
+            "RPG"
+        ],
+        "status": "completed",
+        "total_chapters": 179,
+        "description": "Sung Jin-Woo từ thợ săn yếu nhất thế giới từng bước trở thành thợ săn mạnh nhất sau khi thức tỉnh hệ thống thăng cấp độc nhất.",
+        "cover_url": "https://example.com/solo-leveling.jpg"
+    }
+]
