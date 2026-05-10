@@ -6,6 +6,7 @@ import (
 
 	"mangahub/pkg/database"
 	"mangahub/pkg/utils"
+	"mangahub/internal/tcp"
 )
 
 func main() {
@@ -17,6 +18,11 @@ func main() {
 		log.Fatalf("database: %v", err)
 	}
 	defer db.Close()
+
+	server := tcp.NewServer(cfg.Server.TCPPort)
+	if err := server.Start(); err != nil {
+		log.Fatalf("TCP Server: %v", err)
+	}
 
 	logger.Info("TCP sync server starting", "port", cfg.Server.TCPPort)
 	fmt.Printf("TCP sync server ready on :%d\n", cfg.Server.TCPPort)

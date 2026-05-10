@@ -1,4 +1,4 @@
-package utils
+	package utils
 
 import (
 	"errors"
@@ -15,7 +15,6 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// GenerateToken creates a signed JWT for the given user.
 func GenerateToken(userID, username, secret string) (string, error) {
 	claims := Claims{
 		UserID:   userID,
@@ -29,7 +28,6 @@ func GenerateToken(userID, username, secret string) (string, error) {
 	return token.SignedString([]byte(secret))
 }
 
-// ValidateToken parses and validates a JWT string, returning its claims.
 func ValidateToken(tokenStr, secret string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(t *jwt.Token) (any, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {

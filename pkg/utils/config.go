@@ -62,7 +62,7 @@ func DefaultConfig() *Config {
 	cfg.Notifications.Enabled = true
 	cfg.Logging.Level = "info"
 	cfg.Logging.Path = filepath.Join(project_dir, "logs")
-	cfg.JWT.Secret = "mangahub-secret-change-in-production"
+	cfg.JWT.Secret = "Net-Centric-Programming"
 	cfg.DataPath = filepath.Join(project_dir,"data", "manga.json")
 	return cfg
 }
