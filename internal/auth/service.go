@@ -35,7 +35,10 @@ func (s *Service) Register(username, password string) (*models.User, error){
 		log.Printf("[AUTH] Error: %s", err)
 		return nil, errors.New("Fail to create account")
 	}
+
+	userID := "user_" + time.Now().Format("20060102150405")
 	user := models.User{
+		ID: userID,
 		Username: username,
 		PasswordHash: string(hashedPassword),
 		CreatedAt: time.Now(),

@@ -8,8 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"mangahub/internal/auth"
+	"mangahub/internal/manga"
+
 	"mangahub/pkg/database"
 	"mangahub/pkg/utils"
+	
 )
 
 func main() {
@@ -24,11 +27,13 @@ func main() {
 
 	logger.Info("HTTP API server starting", "port", cfg.Server.HTTPPort)
 	fmt.Printf("HTTP API server ready on :%d\n", cfg.Server.HTTPPort)
-
+	
+	//Auth service init
 	router := gin.Default()
 	authService := auth.NewService(db)
 	authHandler := auth.NewHandler(authService)
-
+	
+	// Auth Routes
 	authRoutes := router.Group("/auth")
 	authRoutes.POST("/register", authHandler.Register)
 	authRoutes.POST("/login", authHandler.Login)
@@ -40,6 +45,7 @@ func main() {
 
 	})
 
+	// Protected Route
 	protectedRoute := router.Group("/protected")
 	protectedRoute.Use(auth.AuthMiddleware())
 	{
@@ -52,6 +58,15 @@ func main() {
 			})
 		})
 	}
+
+	//Manga service init
+	mangaRepo := manga.NewRepository(db)
+	mangaHandler := manga.NewHandler(mangaRepo)
+
+	// Manga Routes
+	mangaRoutes := router.Group("/manga")
+	mangaRoutes.GET("", mangaHandler.List)
+	mangaRoutes.GET("/:id", mangaHandler.GetMangaByID)
 
 	port := cfg.Server.HTTPPort
 	addr := fmt.Sprintf(":%d",port)

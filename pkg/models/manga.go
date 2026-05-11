@@ -12,9 +12,10 @@ type Manga struct {
 }
 
 type SearchFilters struct {
-	Query  string
-	Genre  string
-	Status string
-	Page   int
-	Limit  int
+	Query       string   `form:"q"`
+	Genres      []string `form:"genres"`
+    Status      string   `form:"status"`
+    YearRange   [2]int   `form:"year_range"`
+    Rating      float64  `form:"rating"`
+    SortBy      string   `form:"sort_by"` 
 }
