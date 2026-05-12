@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package manga;
+
+option go_package = "mangahub/proto";
+
+service MangaService {
+    rpc GetManga (GetMangaRequest) returns (MangaResponse);
+    rpc SearchManga (SearchRequest) returns (SearchResponse);
+}
+
+message GetMangaRequest {
+    string id = 1;
+}
+
+message MangaResponse {
+    string id = 1;
+    string title = 2;
+    string status = 3;
+    int32 total_chapters = 4;
+}
+
+message SearchRequest {
+    string query = 1;
+    string status = 2;
+}
+
+message SearchResponse {
+    repeated MangaResponse mangas = 1;
+}

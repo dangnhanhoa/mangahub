@@ -67,4 +67,4 @@ func (h *Handler) ServeWS(c *gin.Context) {
 
 		h.hub.Broadcast(mangaID, msg)
 	}
-}	
+}		
