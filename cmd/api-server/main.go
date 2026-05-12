@@ -10,6 +10,7 @@ import (
 	"mangahub/internal/auth"
 	"mangahub/internal/manga"
 	"mangahub/internal/user"
+	"mangahub/internal/websocket"
 
 	"mangahub/pkg/database"
 	"mangahub/pkg/utils"
@@ -80,6 +81,16 @@ func main() {
 		userRoutes.POST("/library", userHandler.AddToLibrary)
 		userRoutes.GET("/library", userHandler.ListLibrary)
 		userRoutes.PUT("/progress", userHandler.UpdateProgress)
+	}
+
+	//websocket
+	wsHub := websocket.NewHub()
+	wsHandler := websocket.NewHandler(wsHub)
+
+	chatRoutes := router.Group("/chat/:mangaId")
+	chatRoutes.Use(auth.AuthMiddleware())
+	{
+		chatRoutes.GET("/ws",wsHandler.ServeWS)
 	}
 
 	port := cfg.Server.HTTPPort
