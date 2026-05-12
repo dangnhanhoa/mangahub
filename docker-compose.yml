@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  api-server:
+    build: .
+    container_name: mangahub-api
+    command: ./api-server
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  tcp-server:
+    build: .
+    container_name: mangahub-tcp
+    command: ./tcp-server
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  udp-server:
+    build: .
+    container_name: mangahub-udp
+    command: ./udp-server
+    ports:
+      - "9091:9091/udp"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+
+  grpc-server:
+    build: .
+    container_name: mangahub-grpc
+    command: ./grpc-server
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

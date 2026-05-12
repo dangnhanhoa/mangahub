@@ -11,6 +11,8 @@ import (
 	"mangahub/internal/manga"
 	"mangahub/internal/user"
 	"mangahub/internal/websocket"
+	"mangahub/internal/tcp"
+	"mangahub/internal/udp"
 
 	"mangahub/pkg/database"
 	"mangahub/pkg/utils"
@@ -71,8 +73,14 @@ func main() {
 	mangaRoutes.GET("/:id", mangaHandler.GetMangaByID)
 
 	// User service init
+	tcpAddr := fmt.Sprintf("localhost:%d", cfg.Server.TCPPort)
+	if cfg.Server.TCPPort == 0 {
+		tcpAddr = "localhost:9090"
+	}
+	tcpClient := tcp.NewClient(tcpAddr)
+	
 	userRepo := user.NewRepository(db)
-	userHandler := user.NewHandler(userRepo,nil)
+	userHandler := user.NewHandler(userRepo, tcpClient)
 
 	//User Routes
 	userRoutes := router.Group("/user")
@@ -91,6 +99,30 @@ func main() {
 	chatRoutes.Use(auth.AuthMiddleware())
 	{
 		chatRoutes.GET("/ws",wsHandler.ServeWS)
+	}
+
+	// UDP Trigger API
+	udpAddr := fmt.Sprintf("localhost:%d", cfg.Server.UDPPort)
+	if cfg.Server.UDPPort == 0 {
+		udpAddr = "localhost:9091"
+	}
+	udpClient := udp.NewClient(udpAddr)
+
+	adminRoutes := router.Group("/admin")
+	adminRoutes.Use(auth.AuthMiddleware())
+	{
+		adminRoutes.POST("/notify", func(c *gin.Context) {
+			var req struct {
+				MangaID string `json:"manga_id"`
+				Message string `json:"message"`
+			}
+			if err := c.ShouldBindJSON(&req); err != nil {
+				c.JSON(400, gin.H{"error": "bad request"})
+				return
+			}
+			udpClient.TriggerBroadcast(req.MangaID, req.Message)
+			c.JSON(200, gin.H{"message": "notification triggered"})
+		})
 	}
 
 	port := cfg.Server.HTTPPort

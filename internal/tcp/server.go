@@ -84,6 +84,13 @@ func (s *Server) handleConnection(conn net.Conn){
 		case "ping":
 			pong, _:= json.Marshal(Message{Type: "pong"})
 			conn.Write(append(pong, '\n'))
+		case "broadcast":
+			var payload interface{}
+			if err := json.Unmarshal(msg.Data, &payload); err == nil {
+				s.Broadcast(payload)
+			} else {
+				s.Broadcast(msg.Data)
+			}
 		default:
 			log.Printf("[TCP] Received message type '%s' from %s\n", msg.Type, addr)
 		}
