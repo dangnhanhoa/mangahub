@@ -9,6 +9,7 @@ import (
 
 	"mangahub/internal/auth"
 	"mangahub/internal/manga"
+	"mangahub/internal/user"
 
 	"mangahub/pkg/database"
 	"mangahub/pkg/utils"
@@ -67,6 +68,19 @@ func main() {
 	mangaRoutes := router.Group("/manga")
 	mangaRoutes.GET("", mangaHandler.List)
 	mangaRoutes.GET("/:id", mangaHandler.GetMangaByID)
+
+	// User service init
+	userRepo := user.NewRepository(db)
+	userHandler := user.NewHandler(userRepo,nil)
+
+	//User Routes
+	userRoutes := router.Group("/user")
+	userRoutes.Use(auth.AuthMiddleware())
+	{
+		userRoutes.POST("/library", userHandler.AddToLibrary)
+		userRoutes.GET("/library", userHandler.ListLibrary)
+		userRoutes.PUT("/progress", userHandler.UpdateProgress)
+	}
 
 	port := cfg.Server.HTTPPort
 	addr := fmt.Sprintf(":%d",port)
